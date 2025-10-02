@@ -3,10 +3,17 @@ import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
+import stocksRouter from "./routes/stocks";
+import watchlistsRouter from "./routes/watchlists";
+import analysisRouter from "./routes/analysis";
 
 dotenv.config();
 
 const app = express();
+
+app.use("/api/stocks", stocksRouter);
+app.use("/api/watchlists", watchlistsRouter);
+app.use("/api/analysis", analysisRouter);
 
 app.use(helmet());
 app.use(morgan("combined"));
