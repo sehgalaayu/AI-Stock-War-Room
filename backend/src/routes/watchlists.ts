@@ -2,10 +2,42 @@ import express, { Request, Response, Router } from "express";
 
 const router: Router = express.Router();
 
-//GET - /api/watchlists
-router.get("/", async (req: Request, res: Response) => {});
-//POST - /api/watchlists
-router.post("/", async (req: Request, res: Response) => {});
+//GET - /api/watchlists : get user's watchlists
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    res.json({
+      message: "Watchlists api working",
+    });
+  } catch (error) {
+    console.log("watchlists api crashed", error);
+    res.status(500).json({
+      error: "Failed to fetch watchlists",
+    });
+  }
+});
+//POST - /api/watchlists : create watchlist
+router.post("/", async (req: Request, res: Response) => {
+  try {
+    const { name } = req.body;
+    res.json({
+      message: name + "watchlist created",
+    });
+  } catch (error) {
+    console.log("watchlists creation crashed", error);
+    res.status(500).json({
+      error: "Failed to create watchlist",
+    });
+  }
+});
 //POST- api/watchlists/:id/stocks - for adding stock to watchlist
-router.post("/", async (req: Request, res: Response) => {});
+router.post("/:id/stocks", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { stockSymbol } = req.body;
+
+    res.json({ watchlistId: id, stockSymbol, message: "Stock added!" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add stock" });
+  }
+});
 export default router;
