@@ -1,11 +1,12 @@
 import express, { Request, Response, Router } from "express";
+import prisma from "../lib/prisma";
 
 const router: Router = express.Router();
 
 //GET - /api/watchlists : get user's watchlists
 router.get("/", async (req: Request, res: Response) => {
   try {
-    res.json({
+    const wachlist = res.json({
       message: "Watchlists api working",
     });
   } catch (error) {
