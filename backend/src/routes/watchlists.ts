@@ -26,13 +26,16 @@ router.get("/", async (req: Request, res: Response) => {
 //POST - /api/watchlists : create new watchlist
 router.post("/", async (req: Request, res: Response) => {
   try {
-    const { name } = req.body;
-    const newWatclist = await prisma.watchlist.create({
-      data: { name },
+    const { name, userId } = req.body;
+    const newWatchlist = await prisma.watchlist.create({
+      data: {
+        name,
+        user: {
+          connect: { id: userId }, //connect means- don’t create a new user — just link this watchlist to the existing user with that ID.
+        },
+      },
     });
-    res.json({
-      message: name + "watchlist created",
-    });
+    res.json(newWatchlist);
   } catch (error) {
     console.log("watchlists creation crashed", error);
     res.status(500).json({
