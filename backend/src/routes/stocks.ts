@@ -9,7 +9,6 @@ router.get("/", async (req: Request, res: Response) => {
     const stocks = await prisma.stock.findMany();
     res.json({
       stocks: stocks,
-      message: "Stocks api working",
     });
   } catch (error) {
     console.log("Stock api crashed with error: ", error);
@@ -32,9 +31,6 @@ router.get("/:symbol", async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Stock not found" });
     }
     res.json(stock);
-    res.json({
-      message: symbol + " stock api working",
-    });
   } catch (error) {
     console.log(`Stock api crashed with error: `, error);
     res.status(500).json({

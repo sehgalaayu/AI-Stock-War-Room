@@ -6,9 +6,16 @@ const router: Router = express.Router();
 //GET - /api/watchlists : get user's watchlists
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const wachlist = res.json({
-      message: "Watchlists api working",
+    const wachlists = await prisma.watchlist.findMany({
+      include: {
+        items: {
+          include: {
+            stock: true, //also bring me the full stock object connected to this item.
+          },
+        },
+      },
     });
+    res.json(wachlists);
   } catch (error) {
     console.log("watchlists api crashed", error);
     res.status(500).json({
@@ -16,10 +23,13 @@ router.get("/", async (req: Request, res: Response) => {
     });
   }
 });
-//POST - /api/watchlists : create watchlist
+//POST - /api/watchlists : create new watchlist
 router.post("/", async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
+    const newWatclist = await prisma.watchlist.create({
+      data: { name },
+    });
     res.json({
       message: name + "watchlist created",
     });
