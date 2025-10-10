@@ -1,10 +1,9 @@
 import prisma from "../lib/prisma";
 import { hashPwd, comparePwd, generateToken } from "../lib/auth";
 import { registerSchema, loginSchema } from "../lib/validation";
-import express, { Request, Response } from "express";
-import { stripTypeScriptTypes } from "module";
+import express, { Request, Response, Router } from "express";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 //POST  - api/auth/register
 router.post("/register", async (req: Request, res: Response) => {
@@ -41,3 +40,40 @@ router.post("/register", async (req: Request, res: Response) => {
     console.log("User could not be created : ", error);
   }
 });
+
+// POST /api/auth/login
+router.post("/login", async (req, res) => {
+  try {
+    const validatedData = loginSchema.parse(req.body);
+    const { email, password } = validatedData;
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const isValidPassword = await comparePwd(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const token = generateToken(user.id);
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: { id: user.id, name: user.name, email: user.email },
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Login failed" });
+    }
+  }
+});
+
+export default router;
