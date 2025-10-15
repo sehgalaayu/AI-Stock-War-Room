@@ -6,11 +6,13 @@ import cors from "cors";
 import stocksRouter from "./routes/stocks";
 import watchlistsRouter from "./routes/watchlists";
 import analysisRouter from "./routes/analysis";
+import authRouter from "./routes/auth";
 
 dotenv.config();
 
 const app = express();
 
+app.use("/api/auth", authRouter);
 app.use("/api/stocks", stocksRouter);
 app.use("/api/watchlists", watchlistsRouter);
 app.use("/api/analysis", analysisRouter);
