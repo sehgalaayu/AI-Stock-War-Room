@@ -1,10 +1,11 @@
 import express, { Request, Response, Router } from "express";
 import prisma from "../lib/prisma";
+import { validateAuthentication } from "../middleware/auth";
 
 const router: Router = express.Router();
 
 //GET - /api/watchlists : get user's watchlists
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", validateAuthentication, async (req: Request, res: Response) => {
   try {
     const wachlists = await prisma.watchlist.findMany({
       include: {
@@ -24,25 +25,29 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 //POST - /api/watchlists : create new watchlist
-router.post("/", async (req: Request, res: Response) => {
-  try {
-    const { name, userId } = req.body;
-    const newWatchlist = await prisma.watchlist.create({
-      data: {
-        name,
-        user: {
-          connect: { id: userId }, //connect means- don’t create a new user — just link this watchlist to the existing user with that ID.
+router.post(
+  "/",
+  validateAuthentication,
+  async (req: Request, res: Response) => {
+    try {
+      const { name, userId } = req.body;
+      const newWatchlist = await prisma.watchlist.create({
+        data: {
+          name,
+          user: {
+            connect: { id: userId }, //connect means- don’t create a new user — just link this watchlist to the existing user with that ID.
+          },
         },
-      },
-    });
-    res.json(newWatchlist);
-  } catch (error) {
-    console.log("watchlists creation crashed", error);
-    res.status(500).json({
-      error: "Failed to create watchlist",
-    });
+      });
+      res.json(newWatchlist);
+    } catch (error) {
+      console.log("watchlists creation crashed", error);
+      res.status(500).json({
+        error: "Failed to create watchlist",
+      });
+    }
   }
-});
+);
 //POST- api/watchlists/:id/stocks - for adding stock to watchlist
 router.post("/:id/stocks", async (req, res) => {
   try {
