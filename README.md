@@ -5,6 +5,7 @@ A real-time stock tracking application with AI-powered analysis, built with mode
 ## 🚀 Tech Stack
 
 **Backend:**
+
 - Node.js + Express + TypeScript
 - PostgreSQL (Neon) + Prisma ORM
 - JWT Authentication (bcrypt)
@@ -12,6 +13,7 @@ A real-time stock tracking application with AI-powered analysis, built with mode
 - Ollama for AI analysis
 
 **Frontend:**
+
 - Next.js 16 + React 19
 - TypeScript
 - Tailwind CSS
@@ -38,6 +40,7 @@ ai-stock-war-room/
 ## 🛠️ Setup Instructions
 
 ### Prerequisites
+
 - Node.js 20+
 - pnpm installed globally
 - PostgreSQL database (Neon or local)
@@ -110,28 +113,34 @@ ollama pull llama3.2:1b
 ## 🎯 API Endpoints
 
 **Authentication:**
+
 - POST `/api/auth/register` - Register new user
 - POST `/api/auth/login` - Login user
 
 **Stocks:**
+
 - GET `/api/stocks` - Get all stocks
 - GET `/api/stocks/:symbol` - Get specific stock
 
 **Watchlists:**
+
 - GET `/api/watchlists` - Get user watchlists
 - POST `/api/watchlists` - Create watchlist
 - POST `/api/watchlists/:id/stocks` - Add stock to watchlist
 
 **Analysis:**
-- GET `/api/analysis/:symbol` - Get AI analysis
+
+- GET `/api/analysis/:symbol` - Get AI analysi
 
 ## 🔌 WebSocket Events
 
 **Client → Server:**
+
 - `subscribe` - Subscribe to stock updates
 - `ping` - Keep-alive
 
 **Server → Client:**
+
 - `stock-update` - Real-time price updates
 - `analysis-update` - AI analysis results
 - `connection` - Connection established
@@ -139,6 +148,7 @@ ollama pull llama3.2:1b
 ## 📝 Environment Variables
 
 **Backend (.env):**
+
 ```
 DATABASE_URL=postgresql://...
 JWT_SECRET=your-secret-key
@@ -157,14 +167,17 @@ NODE_ENV=development
 ## 🐛 Troubleshooting
 
 **WebSocket not connecting:**
+
 - Check if backend is running on port 3001
 - Verify WebSocket endpoint: ws://localhost:3001/ws
 
 **No stocks showing:**
+
 - Run seed script: `npx ts-node src/lib/seed.ts`
 - Check database connection
 
 **Ollama not working:**
+
 - Ensure Ollama is running: `ollama serve`
 - Check model is downloaded: `ollama list`
 
